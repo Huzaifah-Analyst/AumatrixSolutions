@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { ExternalLink, Globe, Bot, Code2, Wrench, FileText, Star } from 'lucide-react'
+import { ExternalLink, Globe, Bot, Code2, Wrench, BarChart3, Star } from 'lucide-react'
 
 const projects = [
   {
@@ -20,9 +20,9 @@ const projects = [
     icon: Code2,
     color: '#7c3aed',
     bg: '#f5f3ff',
-    tag: 'Mathematical Tool',
-    title: 'AliceNumbers — Collatz Proof Tool',
-    desc: 'Interactive HTML/JS visualization tool for exploring Collatz conjecture transformation sequences. Built for Australian mathematician Dominic Cooper.',
+    tag: 'Research Tool',
+    title: 'Node Graph Editor — AliceNumbers',
+    desc: 'Visual node graph editor for Collatz k-formula mathematical research. Supports infinite canvas, directed edges, subgraph collapsing, and JSON export. Built for Australian mathematician Dominic Cooper.',
     tech: ['HTML', 'CSS', 'JavaScript', 'Canvas API'],
     result: 'Phase 1 delivered — Phase 2 pipeline open',
     link: '#',
@@ -62,13 +62,27 @@ const projects = [
     icon: Code2,
     color: '#d97706',
     bg: '#fffbeb',
-    tag: 'Full Stack App',
+    tag: 'E-Commerce App',
     title: 'Aluminum Zemer v2',
-    desc: 'Full stack web application — v2 completed with enhanced features, improved UI, and optimized backend performance.',
-    tech: ['React', 'Node.js', 'Database', 'API'],
-    result: 'V2 successfully deployed',
+    desc: 'Bilingual (Hebrew/Arabic) e-commerce catalog and order system for an aluminum profiles company. Searchable catalog, cart system, instant language switching, and automated email ordering via Resend API.',
+    tech: ['Vanilla JS', 'Node.js', 'Vercel', 'Resend API'],
+    result: 'Live at alumyj.com',
     link: 'https://alumyj.com',
-    client: 'International',
+    client: 'Israel',
+    stars: 5,
+    featured: false,
+  },
+  {
+    icon: BarChart3,
+    color: '#0891b2',
+    bg: '#ecfeff',
+    tag: 'Lead Generation',
+    title: 'LeadGen Pro',
+    desc: 'AI-powered business lead generation tool using Google Gemini API. Searches 16 business niches across US cities — returns names, phones, emails, and websites. One-click CSV export.',
+    tech: ['HTML', 'JavaScript', 'Python', 'Gemini API'],
+    result: 'Delivered — full lead pipeline built',
+    link: '#',
+    client: 'USA',
     stars: 5,
     featured: false,
   },
