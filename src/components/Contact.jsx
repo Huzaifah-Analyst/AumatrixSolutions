@@ -2,15 +2,32 @@ import { motion } from 'framer-motion'
 import { Mail, MessageSquare, Globe, ArrowRight, Zap, Github, Linkedin } from 'lucide-react'
 import { useState } from 'react'
 
+const BACKEND_URL = 'https://aumatix-backend.onrender.com'
+
 export default function Contact() {
   const [sent, setSent] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const [form, setForm] = useState({ name: '', email: '', service: '', message: '' })
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setSent(true)
-    setTimeout(() => setSent(false), 4000)
-    setForm({ name: '', email: '', service: '', message: '' })
+    setLoading(true)
+    setError('')
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      if (!res.ok) throw new Error('Failed')
+      setSent(true)
+      setForm({ name: '', email: '', service: '', message: '' })
+    } catch {
+      setError('Something went wrong. Please email us directly at huzaifahnaseer377@gmail.com')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -142,9 +159,12 @@ export default function Contact() {
                         onBlur={e => e.target.style.borderColor = 'var(--gray-200)'}
                       />
                     </div>
-                    <button type="submit" className="btn-primary w-full justify-center py-3.5">
-                      Send Message <ArrowRight size={16} />
+                    <button type="submit" disabled={loading} className="btn-primary w-full justify-center py-3.5 disabled:opacity-60 disabled:cursor-not-allowed">
+                      {loading ? 'Sending...' : <> Send Message <ArrowRight size={16} /></>}
                     </button>
+                    {error && (
+                      <p className="text-xs text-center" style={{ color: '#dc2626' }}>{error}</p>
+                    )}
                     <p className="text-xs text-center" style={{ color: 'var(--gray-400)' }}>
                       We respond within 24 hours · Free consultation · No commitment required
                     </p>
