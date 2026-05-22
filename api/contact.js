@@ -1,19 +1,12 @@
-import express from 'express'
-import cors from 'cors'
 import { Resend } from 'resend'
 
-const app = express()
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-app.use(cors({
-  origin: [
-    'https://aumatrixsolutions.vercel.app',
-    'http://localhost:5173',
-  ]
-}))
-app.use(express.json())
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
+  }
 
-app.post('/api/contact', async (req, res) => {
   const { name, email, service, message } = req.body
 
   if (!name || !email || !service || !message) {
@@ -25,6 +18,7 @@ app.post('/api/contact', async (req, res) => {
       from: 'Aumatix Contact Form <onboarding@resend.dev>',
       to: 'huzaifahnaseer377@gmail.com',
       subject: `New Inquiry: ${service} — ${name}`,
+      replyTo: email,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
           <div style="background: #2563eb; padding: 24px; border-radius: 8px 8px 0 0;">
@@ -34,7 +28,7 @@ app.post('/api/contact', async (req, res) => {
           <div style="background: #f8fafc; padding: 24px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 8px 8px;">
             <table style="width: 100%; border-collapse: collapse;">
               <tr>
-                <td style="padding: 8px 0; color: #64748b; font-size: 13px; width: 100px;">Name</td>
+                <td style="padding: 8px 0; color: #64748b; font-size: 13px; width: 120px;">Name</td>
                 <td style="padding: 8px 0; color: #0f172a; font-weight: 600;">${name}</td>
               </tr>
               <tr>
@@ -58,17 +52,11 @@ app.post('/api/contact', async (req, res) => {
           </div>
         </div>
       `,
-      replyTo: email,
     })
 
-    res.json({ success: true })
+    res.status(200).json({ success: true })
   } catch (err) {
     console.error('Resend error:', err)
     res.status(500).json({ error: 'Failed to send email' })
   }
-})
-
-app.get('/', (req, res) => res.json({ status: 'Aumatix backend running' }))
-
-const PORT = process.env.PORT || 3000
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+}

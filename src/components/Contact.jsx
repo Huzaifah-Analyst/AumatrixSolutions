@@ -2,8 +2,6 @@ import { motion } from 'framer-motion'
 import { Mail, MessageSquare, Globe, ArrowRight, Zap, Github, Linkedin } from 'lucide-react'
 import { useState } from 'react'
 
-const BACKEND_URL = 'https://aumatix-backend.onrender.com'
-
 export default function Contact() {
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -15,7 +13,7 @@ export default function Contact() {
     setLoading(true)
     setError('')
     try {
-      const res = await fetch(`${BACKEND_URL}/api/contact`, {
+      const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
