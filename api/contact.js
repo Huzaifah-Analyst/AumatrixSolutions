@@ -1,11 +1,14 @@
-import { Resend } from 'resend'
+const { Resend } = require('resend')
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' })
-  }
+module.exports = async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+
+  if (req.method === 'OPTIONS') return res.status(200).end()
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
   const { name, email, service, message } = req.body
 
@@ -14,9 +17,9 @@ export default async function handler(req, res) {
   }
 
   try {
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: 'Aumatix Contact Form <onboarding@resend.dev>',
-      to: process.env.TO_EMAIL || 'AumatixSolutions@gmail.com',
+      to: 'aumatixsolutions@gmail.com',
       subject: `New Inquiry: ${service} — ${name}`,
       replyTo: email,
       html: `
@@ -46,7 +49,7 @@ export default async function handler(req, res) {
             </div>
             <div style="margin-top: 24px; padding: 12px 16px; background: #eff6ff; border-radius: 6px;">
               <p style="margin: 0; font-size: 13px; color: #2563eb;">
-                Reply directly to this email to respond to ${name}
+                Reply to this email to respond directly to ${name}
               </p>
             </div>
           </div>
@@ -54,9 +57,10 @@ export default async function handler(req, res) {
       `,
     })
 
+    console.log('Email sent:', result)
     res.status(200).json({ success: true })
   } catch (err) {
     console.error('Resend error:', err)
-    res.status(500).json({ error: 'Failed to send email' })
+    res.status(500).json({ error: err.message || 'Failed to send email' })
   }
 }
